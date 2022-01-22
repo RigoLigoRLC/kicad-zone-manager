@@ -50,6 +50,9 @@ class pnlCopperAreaImpl(pnlCopperArea):
             # If desired priority is higher than all others, then create it at top
             if keys[0] < priority:
                 insertPos = 0
+            # If desired priority is lower than all others, then create it at bottom
+            elif keys[-1] > priority:
+                insertPos = -1
             # Then, search in the PrioToNode Mapping to find the first priority larger than the desired priority
             else:
                 i = 0
