@@ -1,9 +1,11 @@
 from .ui import *
 import pcbnew
-import gettext
-import wx
+import platform
+import builtins
+builtins.__dict__['_'] = wx.GetTranslation
 
-_ = gettext.gettext
+
+isWin = platform.system() == "Windows"
 
 
 def pGetFancyLayerName(layer: pcbnew.LSET):
@@ -45,7 +47,7 @@ class pnlCopperAreaImpl(pnlCopperArea):
         keys = list(self.m_prioToNode.keys())
         keys.sort(reverse=True)
         if priority not in keys:
-            # TODO: Creation of new Priority node, needs to determine the position to make the tree correct
+            # Creation of new Priority node, needs to determine the position to make the tree correct
             insertPos = 0
             # If desired priority is higher than all others, then create it at top
             if keys[0] < priority:
@@ -84,8 +86,11 @@ class pnlCopperAreaImpl(pnlCopperArea):
         self.m_prioToArea[prev].remove(zone)  # Delete from original priority
         self.m_transaction[zone] = dest  # Add operation to transaction list
         tree.Delete(item)  # Delete from original position in UI
-        if addSelect:
-            tree.SelectItem(new)  # Make new item selected
+        if isWin:  # FIXME Windows has problem dealing with reselect behavior
+            tree.UnselectAll()
+        else:
+            if addSelect:
+                tree.SelectItem(new)  # Make new item selected
 
     def pIncreaseItemPriority(self, tree: wx.TreeCtrl, item, addSelect: bool):
         data = tree.GetItemData(item)
