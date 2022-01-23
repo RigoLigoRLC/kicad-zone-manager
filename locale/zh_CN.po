@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-23 16:20+0800\n"
-"PO-Revision-Date: 2022-01-23 16:32+0800\n"
+"POT-Creation-Date: 2022-01-23 17:43+0800\n"
+"PO-Revision-Date: 2022-01-23 17:45+0800\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,6 +16,18 @@ msgstr ""
 "Last-Translator: RigoLigo <rigoligo03@gmail.com>\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Language: zh_CN\n"
+
+#: main.py:13
+msgid "Area Manager"
+msgstr "敷铜管理器"
+
+#: main.py:14
+msgid "Modify PCB"
+msgstr "修改 PCB"
+
+#: main.py:15
+msgid "Manage priority of many copper areas"
+msgstr "管理敷铜区域优先级"
 
 #: ui.py:23
 msgid "Zone Manager"
@@ -53,10 +65,10 @@ msgstr "取消"
 msgid "inspect"
 msgstr "(调试)"
 
-#: ui_impl.py:75 ui_impl.py:163
+#: ui_impl.py:73 ui_impl.py:161
 msgid "Priority %d"
 msgstr "优先级 %d"
 
-#: ui_impl.py:243
+#: ui_impl.py:241
 msgid "Copper Zones"
 msgstr "敷铜区"

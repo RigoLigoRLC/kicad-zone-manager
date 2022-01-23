@@ -3,18 +3,16 @@ import pcbnew
 from .ui_impl import frmMainImpl
 import builtins
 import gettext
-result=gettext.bindtextdomain('zone_manager', os.path.join(os.path.dirname(__file__), 'lang'))
-gettext.textdomain('zone_manager')
-builtins.__dict__['_'] = gettext.gettext
+tr = gettext.translation('zone_manager', os.path.join(os.path.dirname(__file__), 'lang'),
+                         languages=['zh_CN'])
+tr.install('zone_manager')
 
-for i in result:
-    print(i)
 
 class AreaManagerPlugin(pcbnew.ActionPlugin):
     def defaults(self):
-        self.name = "Area Manager"
-        self.category = "Modify PCB"
-        self.description = "Manage priority of many copper areas"
+        self.name = _("Area Manager")
+        self.category = _("Modify PCB")
+        self.description = _("Manage priority of many copper areas")
         self.show_toolbar_button = True
 
     def Run(self):

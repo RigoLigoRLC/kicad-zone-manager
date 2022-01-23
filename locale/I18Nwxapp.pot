@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-01-23 16:20+0800\n"
+"POT-Creation-Date: 2022-01-23 17:43+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
+
+#: ./main.py:13
+msgid "Area Manager"
+msgstr ""
+
+#: ./main.py:14
+msgid "Modify PCB"
+msgstr ""
+
+#: ./main.py:15
+msgid "Manage priority of many copper areas"
+msgstr ""
 
 #: ./ui.py:23
 msgid "Zone Manager"
@@ -51,11 +63,11 @@ msgstr ""
 msgid "inspect"
 msgstr ""
 
-#: ./ui_impl.py:75 ./ui_impl.py:163
+#: ./ui_impl.py:73 ./ui_impl.py:161
 msgid "Priority %d"
 msgstr ""
 
-#: ./ui_impl.py:243
+#: ./ui_impl.py:241
 msgid "Copper Zones"
 msgstr ""
 
