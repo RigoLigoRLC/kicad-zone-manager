@@ -20,7 +20,7 @@ _ = gettext.gettext
 class frmMain ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Area Manager"), pos = wx.DefaultPosition, size = wx.Size( 337,319 ), style = wx.DEFAULT_DIALOG_STYLE )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Zone Manager"), pos = wx.DefaultPosition, size = wx.Size( 337,380 ), style = wx.DEFAULT_DIALOG_STYLE )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -41,10 +41,10 @@ class frmMain ( wx.Dialog ):
 
 
 ###########################################################################
-## Class pnlCopperArea
+## Class pnlCopperZone
 ###########################################################################
 
-class pnlCopperArea ( wx.Panel ):
+class pnlCopperZone ( wx.Panel ):
 
 	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 324,341 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
 		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
@@ -53,8 +53,8 @@ class pnlCopperArea ( wx.Panel ):
 
 		sizerCopperSplit = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.treeCopperArea = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT|wx.TR_HIDE_ROOT|wx.TR_MULTIPLE|wx.TR_NO_LINES )
-		sizerCopperSplit.Add( self.treeCopperArea, 2, wx.EXPAND, 5 )
+		self.treeCopperZone = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT|wx.TR_HIDE_ROOT|wx.TR_MULTIPLE|wx.TR_NO_LINES )
+		sizerCopperSplit.Add( self.treeCopperZone, 2, wx.EXPAND, 5 )
 
 		bSizer6 = wx.BoxSizer( wx.VERTICAL )
 
@@ -108,9 +108,9 @@ class pnlCopperArea ( wx.Panel ):
 		self.Layout()
 
 		# Connect Events
-		self.treeCopperArea.Bind( wx.EVT_TREE_ITEM_COLLAPSING, self.treeCopperAreaOnTreeItemCollapsing )
-		self.treeCopperArea.Bind( wx.EVT_TREE_SEL_CHANGED, self.treeCopperAreaOnTreeSelChanged )
-		self.treeCopperArea.Bind( wx.EVT_TREE_SEL_CHANGING, self.treeCopperAreaOnTreeSelChanging )
+		self.treeCopperZone.Bind( wx.EVT_TREE_ITEM_COLLAPSING, self.treeCopperAreaOnTreeItemCollapsing )
+		self.treeCopperZone.Bind( wx.EVT_TREE_SEL_CHANGED, self.treeCopperAreaOnTreeSelChanged )
+		self.treeCopperZone.Bind( wx.EVT_TREE_SEL_CHANGING, self.treeCopperAreaOnTreeSelChanging )
 		self.btnCopperPrioUp.Bind( wx.EVT_BUTTON, self.btnCopperPrioUpOnButtonClick )
 		self.btnCopperPrioDown.Bind( wx.EVT_BUTTON, self.btnCopperPrioDownOnButtonClick )
 		self.btnCopperRemove.Bind( wx.EVT_BUTTON, self.btnCopperRemoveOnButtonClick )

@@ -6,25 +6,35 @@ builtins.__dict__['_'] = wx.GetTranslation
 
 
 isWin = platform.system() == "Windows"
+internalCopper = pcbnew.LSET_InternalCuMask().CuStack()
 
 
 def pGetFancyLayerName(layer: pcbnew.LSET):
-    return ''
+    ret = ''
+    cu = layer.CuStack()
+    if pcbnew.F_Cu in cu:
+        ret += 'F/'
+    if pcbnew.B_Cu in cu:
+        ret += 'B/'
+    for i in internalCopper:
+        if i in cu:
+            ret += str(i) + '/'
+    return ret.removesuffix('/')
 
 
-class pnlCopperAreaImpl(pnlCopperArea):
+class pnlCopperZoneImpl(pnlCopperZone):
     m_rootNodeId = None
-    m_prioToArea = {}  # This and the next dict should always maintains one-to-one correspondence to the UI Nodes,
+    m_prioToZone = {}  # This and the next dict should always maintains one-to-one correspondence to the UI Nodes,
     m_prioToNode = {}  # as well as after a cleanup cycle
     m_transaction = {}
 
     def __init__(self, parent):
-        super(pnlCopperAreaImpl, self).__init__(parent)
+        super(pnlCopperZoneImpl, self).__init__(parent)
         # wx.MessageBox("hello")
 
     def pGetAllItems(self):
         ret = []
-        tree = self.treeCopperArea
+        tree = self.treeCopperZone
         lvl = tree.GetFirstChild(self.m_rootNodeId)[0]
         while lvl.IsOk():
             item = tree.GetFirstChild(lvl)[0]
@@ -34,15 +44,15 @@ class pnlCopperAreaImpl(pnlCopperArea):
             lvl = tree.GetNextSibling(lvl)
         return ret
 
-    def pAddAreaToPriorityLevel(self, priority, area):
+    def pAddZoneToPriorityLevel(self, priority, area):
         # wx.MessageBox(area.GetZoneName(), area.GetNetname())
-        if priority not in self.m_prioToArea:
-            self.m_prioToArea[priority] = [area]
+        if priority not in self.m_prioToZone:
+            self.m_prioToZone[priority] = [area]
         else:
-            self.m_prioToArea[priority].append(area)
+            self.m_prioToZone[priority].append(area)
 
-    # pAddAreaToUiTree IMPLIES pAddAreaToPriorityLevel !!
-    def pAddAreaToUiTree(self, priority, area, tree: wx.TreeCtrl) -> wx.TreeItemId:
+    # pAddZoneToUiTree IMPLIES pAddZoneToPriorityLevel !!
+    def pAddZoneToUiTree(self, priority, area, tree: wx.TreeCtrl, text) -> wx.TreeItemId:
         ret = None
         keys = list(self.m_prioToNode.keys())
         keys.sort(reverse=True)
@@ -64,26 +74,22 @@ class pnlCopperAreaImpl(pnlCopperArea):
             # print('{}'.format(insertPos))
             base = tree.InsertItem(self.m_rootNodeId, insertPos, _(u'Priority %d') % priority, -1, -1, priority)
             ret = tree.AppendItem(base,
-                                  u'{0}[{1}] {2}'.format(area.GetZoneName(),
-                                                         area.GetNetname(),
-                                                         pGetFancyLayerName(area.GetLayerSet())),
+                                  text,
                                   -1, -1,
                                   (priority, area))
             self.m_prioToNode[priority] = base
             tree.Expand(base)
         else:
             ret = tree.AppendItem(self.m_prioToNode[priority],
-                                  u'{0}[{1}] {2}'.format(area.GetZoneName(),
-                                                         area.GetNetname(),
-                                                         pGetFancyLayerName(area.GetLayerSet())),
+                                  text,
                                   -1, -1,
                                   (priority, area))
-        self.pAddAreaToPriorityLevel(priority, area)
+        self.pAddZoneToPriorityLevel(priority, area)
         return ret
 
-    def pChangeAreaPriorityTo(self, tree: wx.TreeCtrl, item, zone, prev, dest, addSelect: bool):
-        new = self.pAddAreaToUiTree(dest, zone, tree)  # Add to new priority
-        self.m_prioToArea[prev].remove(zone)  # Delete from original priority
+    def pChangeZonePriorityTo(self, tree: wx.TreeCtrl, item, zone, prev, dest, addSelect: bool):
+        new = self.pAddZoneToUiTree(dest, zone, tree, tree.GetItemText(item))  # Add to new priority
+        self.m_prioToZone[prev].remove(zone)  # Delete from original priority
         self.m_transaction[zone] = dest  # Add operation to transaction list
         tree.Delete(item)  # Delete from original position in UI
         if isWin:  # FIXME Windows has problem dealing with reselect behavior
@@ -94,20 +100,20 @@ class pnlCopperAreaImpl(pnlCopperArea):
 
     def pIncreaseItemPriority(self, tree: wx.TreeCtrl, item, addSelect: bool):
         data = tree.GetItemData(item)
-        self.pChangeAreaPriorityTo(tree, item, data[1], data[0], data[0] + 1, addSelect)
+        self.pChangeZonePriorityTo(tree, item, data[1], data[0], data[0] + 1, addSelect)
 
     def pDecreaseItemPriority(self, tree: wx.TreeCtrl, item, addSelect: bool):
         data = tree.GetItemData(item)
-        self.pChangeAreaPriorityTo(tree, item, data[1], data[0], data[0] - 1, addSelect)
+        self.pChangeZonePriorityTo(tree, item, data[1], data[0], data[0] - 1, addSelect)
 
     def pIncreaseSelectionPriority(self):
-        tree = self.treeCopperArea
+        tree = self.treeCopperZone
         for i in tree.GetSelections():
             self.pIncreaseItemPriority(tree, i, True)
         self.pCleanupAfterPriorityChange()
 
     def pDecreaseSelectionPriority(self):
-        tree = self.treeCopperArea
+        tree = self.treeCopperZone
         sel = tree.GetSelections()
         # If we're moving a group already with a 0 priority zone, then we should shift everyone else up instead
         othersUp = False
@@ -126,43 +132,43 @@ class pnlCopperAreaImpl(pnlCopperArea):
         self.pCleanupAfterPriorityChange()
 
     def pCleanupAfterPriorityChange(self):
-        for i in list(self.m_prioToArea.keys()):
-            if len(self.m_prioToArea[i]) == 0:  # Found an empty priority level, purge all associated items
-                self.treeCopperArea.Delete(self.m_prioToNode[i])
-                self.m_prioToArea.pop(i)
+        for i in list(self.m_prioToZone.keys()):
+            if len(self.m_prioToZone[i]) == 0:  # Found an empty priority level, purge all associated items
+                self.treeCopperZone.Delete(self.m_prioToNode[i])
+                self.m_prioToZone.pop(i)
                 self.m_prioToNode.pop(i)
 
     def Exec(self, board: pcbnew.BOARD):
         zones = board.Zones()
 
         # Initialize internal data
-        self.m_prioToArea = {}
+        self.m_prioToZone = {}
 
         for i in pcbnew.ZONES(zones):
             if not i.IsOnCopperLayer():
                 continue
             if not i.GetIsRuleArea():
-                self.pAddAreaToPriorityLevel(i.GetPriority(), i)
+                self.pAddZoneToPriorityLevel(i.GetPriority(), i)
             else:
                 pass
 
         # Add to UI
-        tree = self.treeCopperArea
+        tree = self.treeCopperZone
         treeRoot = tree.AddRoot('root_dummy')
         self.m_rootNodeId = treeRoot
-        keys = list(self.m_prioToArea.keys())
+        keys = list(self.m_prioToZone.keys())
         keys.sort(reverse=True)
         for prio in keys:
             # wx.MessageBox(str(prio))
             lvlItem = tree.AppendItem(treeRoot, _(u'Priority %d') % prio, -1, -1, prio)
             self.m_prioToNode[prio] = lvlItem
-            for area in self.m_prioToArea[prio]:
+            for area in self.m_prioToZone[prio]:
                 # wx.MessageBox(area.GetZoneName(), area.GetNetname)
                 tree.AppendItem(lvlItem,
-                                u'{0}[{1}] {2}'.format(area.GetZoneName(),
-                                                       area.GetNetname(),
-                                                       pGetFancyLayerName(
-                                                           area.GetLayerSet())),
+                                u'{0}[{1}] @ {2}'.format(area.GetZoneName(),
+                                                         area.GetNetname(),
+                                                         pGetFancyLayerName(
+                                                             area.GetLayerSet())),
                                 -1, -1,
                                 (prio, area))
         tree.ExpandAll()
@@ -179,20 +185,20 @@ class pnlCopperAreaImpl(pnlCopperArea):
     def btnCopperPrioUpOnButtonClick(self, event):
         self.pIncreaseSelectionPriority()
 
-    def treeCopperAreaOnTreeSelChanging(self, event):
-        tree = self.treeCopperArea
+    def treeCopperZoneOnTreeSelChanging(self, event):
+        tree = self.treeCopperZone
         item = event.GetItem()
         if tree.GetItemParent(item) == self.m_rootNodeId:
             event.Veto()
             tree.SelectChildren(item)
 
-    def treeCopperAreaOnTreeSelChanged(self, event):
-        tree = self.treeCopperArea
+    def treeCopperZoneOnTreeSelChanged(self, event):
+        tree = self.treeCopperZone
         for i in tree.GetSelections():
             if tree.GetItemParent(i) == self.m_rootNodeId:  # Discard incorrectly selected nodes
                 tree.UnselectItem(i)  # FIXME Doesn't work, will always select the full group of OldItem. Not sure why
 
-    def treeCopperAreaOnTreeItemCollapsing(self, event):
+    def treeCopperZoneOnTreeItemCollapsing(self, event):
         event.Veto()
 
     def InspectOnButtonClick(self, event):
@@ -221,10 +227,10 @@ class pnlCopperAreaImpl(pnlCopperArea):
         except:
             self.txtDirectlySet.Clear()
             return
-        tree = self.treeCopperArea
+        tree = self.treeCopperZone
         for i in tree.GetSelections():
             data = tree.GetItemData(i)
-            self.pChangeAreaPriorityTo(tree, i, data[1], data[0], dest, True)
+            self.pChangeZonePriorityTo(tree, i, data[1], data[0], dest, True)
         self.pCleanupAfterPriorityChange()
 
 
@@ -233,9 +239,9 @@ class frmMainImpl(frmMain):
 
     def __init__(self, parent):
         super(frmMainImpl, self).__init__(parent)
-        self.m_pgCopperArea = pnlCopperAreaImpl(self.nbkMain)
-        self.nbkMain.AddPage(self.m_pgCopperArea, _(u'Copper Areas'), True)
+        self.m_pgCopperZone = pnlCopperZoneImpl(self.nbkMain)
+        self.nbkMain.AddPage(self.m_pgCopperZone, _(u'Copper Zones'), True)
 
     def Exec(self, board: pcbnew.BOARD):
-        self.m_pgCopperArea.Exec(board)
+        self.m_pgCopperZone.Exec(board)
         self.ShowModal()
