@@ -108,9 +108,9 @@ class pnlCopperZone ( wx.Panel ):
 		self.Layout()
 
 		# Connect Events
-		self.treeCopperZone.Bind( wx.EVT_TREE_ITEM_COLLAPSING, self.treeCopperAreaOnTreeItemCollapsing )
-		self.treeCopperZone.Bind( wx.EVT_TREE_SEL_CHANGED, self.treeCopperAreaOnTreeSelChanged )
-		self.treeCopperZone.Bind( wx.EVT_TREE_SEL_CHANGING, self.treeCopperAreaOnTreeSelChanging )
+		self.treeCopperZone.Bind( wx.EVT_TREE_ITEM_COLLAPSING, self.treeCopperZoneOnTreeItemCollapsing )
+		self.treeCopperZone.Bind( wx.EVT_TREE_SEL_CHANGED, self.treeCopperZoneOnTreeSelChanged )
+		self.treeCopperZone.Bind( wx.EVT_TREE_SEL_CHANGING, self.treeCopperZoneOnTreeSelChanging )
 		self.btnCopperPrioUp.Bind( wx.EVT_BUTTON, self.btnCopperPrioUpOnButtonClick )
 		self.btnCopperPrioDown.Bind( wx.EVT_BUTTON, self.btnCopperPrioDownOnButtonClick )
 		self.btnCopperRemove.Bind( wx.EVT_BUTTON, self.btnCopperRemoveOnButtonClick )
@@ -124,13 +124,13 @@ class pnlCopperZone ( wx.Panel ):
 
 
 	# Virtual event handlers, override them in your derived class
-	def treeCopperAreaOnTreeItemCollapsing( self, event ):
+	def treeCopperZoneOnTreeItemCollapsing( self, event ):
 		event.Skip()
 
-	def treeCopperAreaOnTreeSelChanged( self, event ):
+	def treeCopperZoneOnTreeSelChanged( self, event ):
 		event.Skip()
 
-	def treeCopperAreaOnTreeSelChanging( self, event ):
+	def treeCopperZoneOnTreeSelChanging( self, event ):
 		event.Skip()
 
 	def btnCopperPrioUpOnButtonClick( self, event ):

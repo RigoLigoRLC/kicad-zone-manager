@@ -215,9 +215,9 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnTreeItemCollapsing">treeCopperAreaOnTreeItemCollapsing</event>
-                                <event name="OnTreeSelChanged">treeCopperAreaOnTreeSelChanged</event>
-                                <event name="OnTreeSelChanging">treeCopperAreaOnTreeSelChanging</event>
+                                <event name="OnTreeItemCollapsing">treeCopperZoneOnTreeItemCollapsing</event>
+                                <event name="OnTreeSelChanged">treeCopperZoneOnTreeSelChanged</event>
+                                <event name="OnTreeSelChanging">treeCopperZoneOnTreeSelChanging</event>
                             </object>
                         </object>
                         <object class="sizeritem" expanded="0">
