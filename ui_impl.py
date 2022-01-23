@@ -1,8 +1,6 @@
 from .ui import *
 import pcbnew
 import platform
-import builtins
-builtins.__dict__['_'] = wx.GetTranslation
 
 
 isWin = platform.system() == "Windows"

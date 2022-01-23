@@ -95,6 +95,8 @@ class pnlCopperZone ( wx.Panel ):
 		bSizer6.Add( self.btnCancel, 0, wx.BOTTOM|wx.RIGHT|wx.LEFT, 5 )
 
 		self.btnInspect = wx.Button( self, wx.ID_ANY, _(u"inspect"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnInspect.Hide()
+
 		bSizer6.Add( self.btnInspect, 0, wx.ALL, 5 )
 
 

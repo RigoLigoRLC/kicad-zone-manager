@@ -1,0 +1,62 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2022-01-23 16:20+0800\n"
+"PO-Revision-Date: 2022-01-23 16:32+0800\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: RigoLigo <rigoligo03@gmail.com>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+
+#: ui.py:23
+msgid "Zone Manager"
+msgstr "敷铜管理器"
+
+#: ui.py:61
+msgid "^"
+msgstr ""
+
+#: ui.py:64
+msgid "v"
+msgstr ""
+
+#: ui.py:67
+msgid "X"
+msgstr ""
+
+#: ui.py:72
+msgid "Set all to"
+msgstr "选中项设为"
+
+#: ui.py:82
+msgid ">"
+msgstr ""
+
+#: ui.py:91
+msgid "OK"
+msgstr "确定"
+
+#: ui.py:94
+msgid "Cancel"
+msgstr "取消"
+
+#: ui.py:97
+msgid "inspect"
+msgstr "(调试)"
+
+#: ui_impl.py:75 ui_impl.py:163
+msgid "Priority %d"
+msgstr "优先级 %d"
+
+#: ui_impl.py:243
+msgid "Copper Zones"
+msgstr "敷铜区"
