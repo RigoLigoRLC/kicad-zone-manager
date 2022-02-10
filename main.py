@@ -19,3 +19,5 @@ class AreaManagerPlugin(pcbnew.ActionPlugin):
         m_mainWin = frmMainImpl(None)
 
         m_mainWin.Exec(pcbnew.GetBoard())
+
+        m_mainWin.DestroyLater()
