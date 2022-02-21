@@ -243,3 +243,4 @@ class frmMainImpl(frmMain):
     def Exec(self, board: pcbnew.BOARD):
         self.m_pgCopperZone.Exec(board)
         self.ShowModal()
+        self.Destroy()
